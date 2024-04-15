@@ -4,7 +4,7 @@ import sympy
 import pandas as pd
 from pathlib import Path
 from utils.helpers import read_json
-from prompts.gsm8k_tot import *
+from prompts.gsm8k_rt import *
 
 
 def get_current_numbers(y: str) -> str:
@@ -91,9 +91,10 @@ class GSM8kTask():
         prompt = vote_prompt
         prompt = prompt.format(instruction=x).strip()
         for i, y in enumerate(ys, 1):
-            y = y.replace('\n', ' ')
-            prompt += f'\nChoice {i}: {y}'
-        prompt += "\n" + "Response:"
+            y = y.strip()
+            prompt += f'\n\nChoice {i}: \n{y}'
+        prompt += "\n\n" + "Response:"
+        # breakpoint()
         return prompt
     
     @staticmethod
