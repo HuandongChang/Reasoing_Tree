@@ -30,7 +30,7 @@ keys = [
 
 
 together.api_key = keys[0]
-model_list = [d['name'] for d in together.Models.list()]
+model_list = [d['id'] for d in together.Models.list()]
 cnt = 0
 
 
@@ -51,7 +51,8 @@ def call(prompt, model_ckpt, max_tokens, temperature, top_k, top_p, stop):
     )
     cnt = (cnt + 1) % len(keys)
     # return text
-    return response['output']['choices'][0]['text']
+    # return response['output']['choices'][0]['text']
+    return response['choices'][0]['text']
 
 
 def call_TogetherAI(prompt, model_ckpt, max_tokens=256, temperature=0.8, top_k=40, top_p=0.95, stop=None):
