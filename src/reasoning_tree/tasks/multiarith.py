@@ -19,7 +19,7 @@ class multiarithTask():
         self.data = read_json(os.path.join(data_root, 'multiarith', 'test_with_ids.json'))
         self.value_cache = {}
         self.steps = 16
-        self.stops = ['\n', "\n\n"]
+        self.stops = ["\n", "\n\n"]
 
     def __len__(self) -> int:
         return len(self.data)

@@ -1,11 +1,11 @@
 [
     {
-        "question": "Each pack of dvds costs 76 dollars. If there is a discount of 25 dollars on each pack How much do you have to pay to buy each pack?",
+        "question": "Each pack of dvds costs 76 dollars. If there is a discount of 25 dollars on each pack. How much do you have to pay to buy each pack?",
         "answer": 51.0,
         "id": 0
     },
     {
-        "question": "Dan had $ 3 left with him after he bought a candy bar. If he had $ 4 at the start How much did the candy bar cost?",
+        "question": "Dan had $ 3 left with him after he bought a candy bar. If he had $ 4 at the start. How much did the candy bar cost?",
         "answer": 1.0,
         "id": 1
     },

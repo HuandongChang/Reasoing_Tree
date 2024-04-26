@@ -59,7 +59,7 @@ def call_TogetherAI(prompt, model_ckpt, max_tokens=256, temperature=0.8, top_k=4
     output = None
     while output is None:
         try:
-            output = call(prompt, model_ckpt, max_tokens, temperature, top_k, top_p, stop)
+            output = call(prompt, model_ckpt, max_tokens, temperature, top_k, top_p, stop=["\n", "\n\n"])
         except:
             print("TogetherAI call failed. Sleeping...")
             time.sleep(5)

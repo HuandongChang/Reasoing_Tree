@@ -16,16 +16,16 @@ class SVMPTask():
 
     def __init__(self):
         data_root = Path("./data")
-        self.data = read_json(os.path.join(data_root, 'SVAMP', 'SVAMP.json'))
+        self.data = read_json(os.path.join(data_root, 'SVAMP', 'test_with_ids.json'))
         self.value_cache = {}
         self.steps = 16
-        self.stops = ['\n', '\n\n']
+        self.stops = ['\n', "\n\n"]
 
     def __len__(self) -> int:
         return len(self.data)
     
     def get_input(self, idx: int) -> str:
-        return self.data[idx]['Body'] + " " + self.data[idx]['Question']
+        return self.data[idx]['question']
     
     def extract_answer(self, preds: str):
         preds = preds.split('The answer is')
@@ -73,7 +73,7 @@ class SVMPTask():
 
     def test_output(self, idx: int, output: str):
         model_answer = self.extract_answer(output)
-        gt = self.get_gt(self.data[idx]["Answer"])
+        gt = self.get_gt(self.data[idx]["answer"])
 
         if self.is_number(model_answer):
             correct = int(float(model_answer) == float(gt))
