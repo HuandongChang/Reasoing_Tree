@@ -19,7 +19,7 @@ class GSM8kTask():
         self.data = read_json(os.path.join(data_root, 'gsm8k', 'test_with_ids.json'))
         self.value_cache = {}
         self.steps = 16
-        self.stops = ['\n', '\n\n']
+        self.stops = ['\n', "\n\n"]
 
     def __len__(self) -> int:
         return len(self.data)
@@ -88,11 +88,19 @@ class GSM8kTask():
     
     @staticmethod
     def vote_prompt_wrap(x: str, ys: list) -> str:
+
+        def remove_step_notations(text):
+            pattern = r"Step [1-9]:\s*"
+            cleaned_text = re.sub(pattern, "", text)
+            return cleaned_text
+        
         prompt = vote_prompt
         prompt = prompt.format(instruction=x).strip()
         for i, y in enumerate(ys, 1):
+            y = remove_step_notations(y)
             y = y.replace('\n', ' ')
-            prompt += f'\nChoice {i}: {y}'
+            y = y.replace('  ', '')
+            prompt += f'\nChoice {i}:{y}'
         prompt += "\n" + "Response:"
         return prompt
     

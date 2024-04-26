@@ -300,30 +300,35 @@ def setup_data_loader(args):
     return dataloader
 
 # ver 0.2
-def answer_cleansing(args, pred):
+def answer_cleansing(args, pred_full):
     if args.verbose:
-        print("pred_before : " + pred)
+        print("pred_before : " + pred_full)
 
     if args.method in ("few_shot", "few_shot_cot"):
-        preds = pred.split('The answer is')
+        preds = pred_full.split('The answer is')
         answer_flag = True if len(preds) > 1 else False 
         if answer_flag:
             # Pick first answer with flag
             pred = preds[1]
+            model_response=preds[0]
         else:
             # Pick last number without flag
             pred = preds[-1]
+            model_response=preds[-1]
     else:
-        preds = pred.split('\nTherefore, the answer (arabic numerals) is')
+        preds = pred_full.split('\nTherefore, the answer (arabic numerals) is')
         answer_flag = True if len(preds) > 1 else False 
         if answer_flag:
             # Pick first answer with flag
             pred = preds[1]
+            model_response=preds[0]
         else:
             # Pick last number without flag
             pred = preds[-1]
+            model_response=preds[-2]
+    
+    # breakpoint()
 
-    model_response = pred
     if args.dataset_name in ("aqua", "commonsensqa"):
         pred = re.findall(r'A|B|C|D|E', pred)
     elif args.dataset_name == "bigbench_date":

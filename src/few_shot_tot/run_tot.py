@@ -72,9 +72,16 @@ def solve(args, task, idx, model, tokenizer):
             select_ids = np.random.choice(ids, size=args.n_select_sample, p=ps).tolist()
         except:
             select_ids = np.random.choice(ids, size=args.n_select_sample).tolist()
+
+        if args.verbose:
+            print(new_ys[:])
+            print("")
+            print(select_ids)
+
         select_new_ys = [new_ys[select_id] for select_id in select_ids]
         paths.append(select_new_ys[:])
         if args.verbose:
+            print("")
             print(select_new_ys[:])
             print("")
 
@@ -105,7 +112,6 @@ def solve(args, task, idx, model, tokenizer):
         preds[final_y] = preds.get(final_y, 0) + 1
     sorted_items = sorted(preds.items(), key=lambda item: item[1], reverse=True)
     final_answer = sorted_items[0][0]
-
     return float(final_answer), paths
 
 def run(args):
@@ -123,7 +129,12 @@ def run(args):
         if args.verbose:
             print("model_asnwer: ", model_answer)
         # gt
-        gt = task.get_gt(task.data[i]["answer"])
+        if args.task == "gsm8k":
+            gt = task.get_gt(task.data[i]["answer"])
+        elif args.task == "multiarith":
+            gt = task.get_gt(task.data[i]["final_ans"])
+        elif args.task == "SVAMP":
+            gt = task.get_gt(task.data[i]["Answer"])
         gt = gt.replace(',','').replace('\n', '')
         gt = float(gt)
         
@@ -139,7 +150,7 @@ def run(args):
         pbar.set_description(f"Acc: {acc:.5f}")
 
     model = args.model.split("/")[-1]
-    file_name = f"out/gsm8k_tot_{model}.json"
+    file_name = f"out/{args.task}_tot_{model}.json"
     combined_list = [{'answer': a, 'correct': c} for a, c in zip(all_question_paths, all_question_corrects)]
 
     directory = os.path.dirname(file_name)

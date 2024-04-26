@@ -38,4 +38,5 @@ def get_parser():
     parser.add_argument("--method", type=str, default="zero_shot_cot", choices=["zero_shot", "zero_shot_cot", "few_shot", "few_shot_cot"], help="method")
     parser.add_argument("--max_num_worker", type=int, default=3, help="maximum number of workers for dataloader")
     
+    parser.add_argument("--num_examples", type=int, default=10000)
     return parser

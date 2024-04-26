@@ -78,26 +78,35 @@ def solve(args, task, idx, model, tokenizer):
         # generate subquestion
         new_ys = [get_samples(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops) for y in ys]
         new_ys = list(itertools.chain(*new_ys))
+        if args.verbose:
+            print("new_ys: ", new_ys[:])
+            print(len(new_ys))
+            print("")
         
         # generate answer for those subquestions
         new_as = [get_subquestion_answer(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops) for y in new_ys]
-        
+        if args.verbose:
+            print("new_as: ", new_as[:])
+            print(new_as)
+            print("")
+
         # update ys
         new_ys = [y + a + "\n" for y, a in zip(new_ys, new_as)]
         ids = list(range(len(new_ys)))
 
-        try:
+        if args.enable_votes:
             # evaluation
             values = get_votes(args, model, tokenizer, task, x, new_ys, args.n_evaluate_sample)
             # selection
             ps = np.array(values) / sum(values)
             select_ids = np.random.choice(ids, size=args.n_select_sample, p=ps).tolist()
-        except:
+        else:
             select_ids = np.random.choice(ids, size=args.n_select_sample).tolist()
         select_new_ys = [new_ys[select_id] for select_id in select_ids]
         paths.append(select_new_ys[:])
         if args.verbose:
-            print(select_new_ys[:])
+            print("select_new_ys: ", select_new_ys[:])
+            print(len(select_new_ys))
             print("")
         
         pruned_branch_ids = []
@@ -107,10 +116,13 @@ def solve(args, task, idx, model, tokenizer):
                 final_ys.append(task.extract_answer(response))
                 pruned_branch_ids.append(i)
 
+        if len(final_ys) > args.n_evaluate_sample:
+            break
+
         pruned_branch_ids.sort(reverse=True)
         for index in pruned_branch_ids:
             select_new_ys.pop(index)
-                
+        
         ys = select_new_ys
 
     if not final_ys:
@@ -142,12 +154,17 @@ def run(args):
     all_question_corrects = []
     pbar = tqdm(range(max(args.task_start_index, 0), min(len(task), args.task_end_index)), desc="Acc: 0.00%")
     for i in pbar:
+        if i >= 2:
+            break
         # solve
         model_answer, paths = solve(args, task, i, model, tokenizer)
         if args.verbose:
             print("model_asnwer: ", model_answer)
         # gt
-        gt = task.get_gt(task.data[i]["answer"])
+        if args.task in ("multiarith"):
+            gt = task.get_gt(task.data[i]["final_ans"])
+        else:
+            gt = task.get_gt(task.data[i]["answer"])
         gt = gt.replace(',','').replace('\n', '')
         gt = float(gt)
         
@@ -163,7 +180,7 @@ def run(args):
         pbar.set_description(f"Acc: {acc:.5f}")
 
     model = args.model.split("/")[-1]
-    file_name = f"out/gsm8k_tot_{model}.json"
+    file_name = f"out/{args.task}_rt_{model}.json"
     combined_list = [{'answer': a, 'correct': c} for a, c in zip(all_question_paths, all_question_corrects)]
 
     directory = os.path.dirname(file_name)
@@ -181,9 +198,10 @@ if __name__ == '__main__':
     args.add_argument('--task_end_index', type=int, default=float('inf'))
     args.add_argument('--n_generate_sample', type=int, default=3)  
     args.add_argument('--n_evaluate_sample', type=int, default=8)
-    args.add_argument('--n_select_sample', type=int, default=3)
+    args.add_argument('--n_select_sample', type=int, default=2)
     args.add_argument("--use_together_ai", action='store_true')
     args.add_argument("--verbose", action='store_true')
+    args.add_argument("--enable_votes", action='store_true')
     args.add_argument("--model", required=True)
     args = args.parse_args()
     fix_seeds(1)

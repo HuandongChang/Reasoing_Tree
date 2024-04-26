@@ -12,11 +12,11 @@ def get_current_numbers(y: str) -> str:
     return last_line.split('left: ')[-1].split(')')[0]
 
 
-class GSM8kTask():
+class SVMPTask():
 
     def __init__(self):
         data_root = Path("./data")
-        self.data = read_json(os.path.join(data_root, 'gsm8k', 'test_with_ids.json'))
+        self.data = read_json(os.path.join(data_root, 'SVAMP', 'test_with_ids.json'))
         self.value_cache = {}
         self.steps = 16
         self.stops = ["\n", "\n\n"]
@@ -69,7 +69,7 @@ class GSM8kTask():
         return False
     
     def get_gt(self, question_asnwer):
-        return question_asnwer.split("#### ")[-1]
+        return str(question_asnwer)
 
     def test_output(self, idx: int, output: str):
         model_answer = self.extract_answer(output)

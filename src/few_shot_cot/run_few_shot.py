@@ -1,7 +1,7 @@
 import sys
 sys.path.append(".")
 
-from model.TogetherAI_API import call_TogetherAI
+from models.TogetherAI_API import call_TogetherAI
 from utils.helpers import read_json, load_prompt_template, regex_calibrate, fix_seeds, setup_logging
 from utils.helpers import setup_data_loader, answer_cleansing, is_number
 from utils.arg_parser import get_parser
@@ -36,15 +36,22 @@ def do_few_shot_cot_generation(args):
 
     jsonl_model_response = []
     jsonl_correct = []  
+    gt_lst = []
+    pred_lst = []
+    id = []
+    questions=[]
 
-    for i, data in tqdm(enumerate(dataloader), total=len(dataloader)):
+    for i, data in tqdm(enumerate(dataloader), total=min(args.num_examples,len(dataloader))):
+        if i>=args.num_examples:
+            break
+
         if args.verbose:
             print(' ')
             print("{}st data".format(i+1))
                 
         # Prepare question template ...
-        x, y = data
-        x = "Q: " + x[0] + "\n" + "A:"
+        question, y = data
+        x = "Q: " + question[0] + "\n" + "A:"
         y = y[0].strip()
         
         if args.method == "zero_shot":
@@ -57,14 +64,16 @@ def do_few_shot_cot_generation(args):
             raise ValueError("method is not properly defined ...")
         
         # Answer prediction by generating text ...
-        breakpoint()
+
+
         z = []
         for _ in range(args.num_consistency):
             z.append(generate_response(x, model, tokenizer))
+        
 
         # Answer extraction for zero-shot-cot ...
         if args.method == "zero_shot_cot":
-            z2 = x + z + " " + '\nTherefore, the answer (arabic numerals) is'
+            z2 = x + z[0] + " " + '\nTherefore, the answer (arabic numerals) is'
             pred = generate_response(z2, model, tokenizer)
             if args.verbose:
                 print(z2 + pred)
@@ -72,6 +81,7 @@ def do_few_shot_cot_generation(args):
             pred = z if args.num_consistency > 1 else z[0]
             if args.verbose and args.num_consistency == 1:
                 print(x + pred)
+        # breakpoint()
 
         # Clensing of predicted answer ...n
         if args.num_consistency == 1:
@@ -94,6 +104,10 @@ def do_few_shot_cot_generation(args):
 
         pred = pred.replace(',','').replace('\n', '')
         gt = y.replace(',','').replace('\n', '')
+        gt_lst.append(gt)
+        pred_lst.append(pred)
+        id.append(i+1)
+        questions.append(question[0])
         
         # Checking answer ...
         if is_number(pred):
@@ -109,14 +123,15 @@ def do_few_shot_cot_generation(args):
     
     # Calculate accuracy ...
     accuracy = (sum(correct_list) * 1.0 / total) * 100
-    print("accuracy : {}".format(accuracy))
+    print("accuracy : {} %".format(accuracy))
 
     # Record result
     try:
         # Record result
         model = args.model_ckpt.split("/")[-1]
         file_name = f"out/{args.dataset_name}_{args.method}_{model}.json"
-        combined_list = [{'answer': a, 'correct': c} for a, c in zip(jsonl_model_response, jsonl_correct)]
+        combined_list = [{"id":i, "question":q, "groud_truth_answer":gt,'model_response': response,'model_answer': p, 'correct': c} 
+                         for i, q, gt, response, p, c in zip(id, questions, gt_lst, jsonl_model_response, pred_lst, jsonl_correct)]
 
         # Check if the 'out' directory exists and create it if it doesn't
         directory = os.path.dirname(file_name)
