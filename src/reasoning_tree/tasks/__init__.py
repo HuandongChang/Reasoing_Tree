@@ -3,7 +3,7 @@ def get_task(name):
         from .gsm8k import GSM8kTask
         return GSM8kTask()
     elif name == 'SVAMP':
-        from .SVMP import SVMPTask
+        from .SVAMP import SVMPTask
         return SVMPTask()
     elif name == 'multiarith':
         from .multiarith import multiarithTask
