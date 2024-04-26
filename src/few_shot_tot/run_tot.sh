@@ -14,4 +14,10 @@ done
 
 python3 src/few_shot_tot/run_tot.py \
         --model "togethercomputer/llama-2-7b" \
-        --use_together_ai
+        --use_together_ai \
+        --task "multiarith"
+
+python3 src/few_shot_tot/run_tot.py \
+        --model "togethercomputer/llama-2-7b" \
+        --use_together_ai \
+        --task "SVAMP"

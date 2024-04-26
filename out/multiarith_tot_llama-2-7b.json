@@ -1,0 +1,72 @@
+[
+    {
+        "answer": [
+            [
+                "\nStep 1: Paige had 11 songs on her mp3 player.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\n"
+            ],
+            [
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\n"
+            ],
+            [
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\n"
+            ],
+            [
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\nStep 4: So she ended with 11 - 9 + 8 = 10 songs.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\nStep 4: So she ended with 11 - 9 + 8 = 10 songs.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\nStep 4: So she ended with 11 - 9 + 8 = 10 songs.\n"
+            ],
+            [
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\nStep 4: So she ended with 11 - 9 + 8 = 10 songs.\nStep 5: The answer is 10.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\nStep 4: So she ended with 11 - 9 + 8 = 10 songs.\nStep 5: The answer is 10.\n",
+                "\nStep 1: Paige had 11 songs on her mp3 player.\nStep 2: She deleted 9 old songs.\nStep 3: She added 8 new songs.\nStep 4: So she ended with 11 - 9 + 8 = 10 songs.\nStep 5: The answer is 10.\n"
+            ]
+        ],
+        "correct": 1
+    },
+    {
+        "answer": [
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\n"
+            ],
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\n"
+            ],
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\n"
+            ],
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So 26 - 26% of 100% is 74% of 100%.\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So 39/100 * 26% is 39/100 * 26/10\n"
+            ],
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\n"
+            ],
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\nStep 6: 1.04 - 0.74 = 0.3\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\nStep 6: 1.04 - 0.74 = 0.3\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\nStep 6: 1.04 - 0.74 = 0.3\n"
+            ],
+            [
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\nStep 6: 1.04 - 0.74 = 0.3\nStep 7: The answer is 0.3\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\nStep 6: 1.04 - 0.74 = 0.3\nStep 7: The answer is 0.3\n",
+                "\nStep 1: There were 39 girls and 4 boys originally.\nStep 2: 26 of them got called back.\nStep 3: 26 is 26% of 100%\nStep 4: So we divide 26 by 100 to get 0.26\nStep 5: 0.26 * 4 = 1.04\nStep 6: 1.04 - 0.74 = 0.3\nStep 7: The answer is 0.3\n"
+            ]
+        ],
+        "correct": 0
+    }
+]
