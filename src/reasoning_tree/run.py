@@ -78,26 +78,32 @@ def solve(args, task, idx, model, tokenizer):
         # generate subquestion
         new_ys = [get_samples(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops) for y in ys]
         new_ys = list(itertools.chain(*new_ys))
+        if args.verbose:
+            print("new_ys: ", new_ys[:])
+            print("")
         
         # generate answer for those subquestions
         new_as = [get_subquestion_answer(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops) for y in new_ys]
-        
+        if args.verbose:
+            print("new_as: ", new_as[:])
+            print("")
+
         # update ys
         new_ys = [y + a + "\n" for y, a in zip(new_ys, new_as)]
         ids = list(range(len(new_ys)))
 
-        try:
+        if args.enable_votes:
             # evaluation
             values = get_votes(args, model, tokenizer, task, x, new_ys, args.n_evaluate_sample)
             # selection
             ps = np.array(values) / sum(values)
             select_ids = np.random.choice(ids, size=args.n_select_sample, p=ps).tolist()
-        except:
+        else:
             select_ids = np.random.choice(ids, size=args.n_select_sample).tolist()
         select_new_ys = [new_ys[select_id] for select_id in select_ids]
         paths.append(select_new_ys[:])
         if args.verbose:
-            print(select_new_ys[:])
+            print("select_new_ys: ", select_new_ys[:])
             print("")
         
         pruned_branch_ids = []
@@ -163,7 +169,7 @@ def run(args):
         pbar.set_description(f"Acc: {acc:.5f}")
 
     model = args.model.split("/")[-1]
-    file_name = f"out/gsm8k_tot_{model}.json"
+    file_name = f"out/{args.task}_tot_{model}.json"
     combined_list = [{'answer': a, 'correct': c} for a, c in zip(all_question_paths, all_question_corrects)]
 
     directory = os.path.dirname(file_name)
@@ -184,6 +190,7 @@ if __name__ == '__main__':
     args.add_argument('--n_select_sample', type=int, default=3)
     args.add_argument("--use_together_ai", action='store_true')
     args.add_argument("--verbose", action='store_true')
+    args.add_argument("--enable_votes", action='store_true')
     args.add_argument("--model", required=True)
     args = args.parse_args()
     fix_seeds(1)

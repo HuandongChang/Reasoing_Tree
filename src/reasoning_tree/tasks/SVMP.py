@@ -12,20 +12,20 @@ def get_current_numbers(y: str) -> str:
     return last_line.split('left: ')[-1].split(')')[0]
 
 
-class GSM8kTask():
+class SVMPTask():
 
     def __init__(self):
         data_root = Path("./data")
-        self.data = read_json(os.path.join(data_root, 'gsm8k', 'test_with_ids.json'))
+        self.data = read_json(os.path.join(data_root, 'SVAMP', 'SVAMP.json'))
         self.value_cache = {}
         self.steps = 16
-        self.stops = ['\n', '\n\n']
+        self.stops = ['\n', "\n\n"]
 
     def __len__(self) -> int:
         return len(self.data)
     
     def get_input(self, idx: int) -> str:
-        return self.data[idx]['question']
+        return self.data[idx]['Body'] + " " + self.data[idx]['Question']
     
     def extract_answer(self, preds: str):
         preds = preds.split('The answer is')
@@ -69,11 +69,11 @@ class GSM8kTask():
         return False
     
     def get_gt(self, question_asnwer):
-        return question_asnwer.split("#### ")[-1]
+        return question_asnwer
 
     def test_output(self, idx: int, output: str):
         model_answer = self.extract_answer(output)
-        gt = self.get_gt(self.data[idx]["answer"])
+        gt = self.get_gt(self.data[idx]["Answer"])
 
         if self.is_number(model_answer):
             correct = int(float(model_answer) == float(gt))
