@@ -154,7 +154,7 @@ def run(args):
     all_question_corrects = []
     pbar = tqdm(range(max(args.task_start_index, 0), min(len(task), args.task_end_index)), desc="Acc: 0.00%")
     for i in pbar:
-        if i >= 2:
+        if i >= 500:
             break
         # solve
         model_answer, paths = solve(args, task, i, model, tokenizer)
@@ -197,7 +197,7 @@ if __name__ == '__main__':
     args.add_argument('--task_start_index', type=int, default=0)
     args.add_argument('--task_end_index', type=int, default=float('inf'))
     args.add_argument('--n_generate_sample', type=int, default=3)  
-    args.add_argument('--n_evaluate_sample', type=int, default=8)
+    args.add_argument('--n_evaluate_sample', type=int, default=5)
     args.add_argument('--n_select_sample', type=int, default=2)
     args.add_argument("--use_together_ai", action='store_true')
     args.add_argument("--verbose", action='store_true')

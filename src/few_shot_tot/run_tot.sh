@@ -1,23 +1,19 @@
 #!/bin/bash
 
-models=("/home/ms/mingyuan/model_hf/Llama-2-7b-hf" "/home/ms/mingyuan/model_hf/Llama-2-13b-chat-hf")
+tasks=("gsm8k" "multiarith" "SVAMP")
+models=("meta-llama/Llama-3-70b-chat-hf" "mistralai/Mixtral-8x7B-Instruct-v0.1" "meta-llama/Llama-3-8b-chat-hf")
 
-for model in "${models[@]}"; do
-    echo CUDA_VISIBLE_DEVICES=0 python src/few_shot_tot/run_tot.py \
-        --model "$model" 
+for task in "${tasks[@]}"; do
+    for model in "${models[@]}"; do
+        echo "Running task: $task with model: $model"
+        echo python3 src/few_shot_tot/run_tot.py \
+                --model "$model" \
+                --use_together_ai \
+                --task "$task"
 
-    CUDA_VISIBLE_DEVICES=0 python src/few_shot_tot/run_tot.py \
-        --model "$model" 
+        python3 src/few_shot_tot/run_tot.py \
+                --model "$model" \
+                --use_together_ai \
+                --task "$task"
+    done
 done
-
-
-
-python3 src/few_shot_tot/run_tot.py \
-        --model "togethercomputer/llama-2-7b" \
-        --use_together_ai \
-        --task "multiarith"
-
-python3 src/few_shot_tot/run_tot.py \
-        --model "togethercomputer/llama-2-7b" \
-        --use_together_ai \
-        --task "SVAMP"
