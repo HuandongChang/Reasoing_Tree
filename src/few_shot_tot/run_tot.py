@@ -126,17 +126,17 @@ def run(args):
     all_question_corrects = []
     pbar = tqdm(range(max(args.task_start_index, 0), min(len(task), args.task_end_index)), desc="Acc: 0.00%")
     for i in pbar:
+        if i >= 150:
+            break
         # solve
         model_answer, paths = solve(args, task, i, model, tokenizer)
         if args.verbose:
             print("model_asnwer: ", model_answer)
         # gt
-        if args.task == "gsm8k":
+        if args.task in ("SVAMP", "gsm8k"):
             gt = task.get_gt(task.data[i]["answer"])
         elif args.task == "multiarith":
             gt = task.get_gt(task.data[i]["final_ans"])
-        elif args.task == "SVAMP":
-            gt = task.get_gt(task.data[i]["Answer"])
         gt = gt.replace(',','').replace('\n', '')
         gt = float(gt)
         

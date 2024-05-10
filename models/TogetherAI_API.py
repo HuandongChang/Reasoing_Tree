@@ -16,25 +16,28 @@ import time
 # "380775a5d7ac61cce84c5aefad7f0b28ec83bebb94632ad01e227ec1f0a3c34e",
 # "1ef5fdc7f7e072f3280886dcb9b7883187cee93a87dd40a37cf6602ee39850d4",
 # "acc82a8f44d765ce1462a2e047e5e6d1c434a4f5974d12e1aa526320cf552969",
+# "6e3ac9ec855ba22ae3e37b7fbd105d6766ca9c14dbd7274104e59b5830bf81b8",
+# "74fef87580c5353d584a4b424c47fa739b0b3a98839b0494a77087bf1e9966c6",
+# "1e7cec942d381bed1d6fb26ba1bed5f9142eea65858fcb18d9a29819a4ac821a",
+# "bca5e486b7ba3ca8c711ef3db6b500440603860ae05b4914ed21689443f3cda8",
+# "c9e585d8fed30b7275d4b1244d1e0810cfd2593151ed16ac58a1753b49709c23",
+# "621c928c7d8722869036cdda8b87077363dc2874aadda409419b66abb43a5148",
 
 keys = [
-    "6e3ac9ec855ba22ae3e37b7fbd105d6766ca9c14dbd7274104e59b5830bf81b8",
-    "74fef87580c5353d584a4b424c47fa739b0b3a98839b0494a77087bf1e9966c6",
-    "1e7cec942d381bed1d6fb26ba1bed5f9142eea65858fcb18d9a29819a4ac821a",
-    "bca5e486b7ba3ca8c711ef3db6b500440603860ae05b4914ed21689443f3cda8",
-    "c9e585d8fed30b7275d4b1244d1e0810cfd2593151ed16ac58a1753b49709c23",
-    "621c928c7d8722869036cdda8b87077363dc2874aadda409419b66abb43a5148",
+    "864bbce122eb36c4f729123cdad090c2dd2cdc890deabec429e4abf264d686ec",
+    "7330364d2793e1dec3e2389eae04254c80fa90c61b8406d17bf5d206beec3d1e",
+    "290fd0feaea11924501bdbe9ac34d58a6ba778a0c4d4372b51bbf388590043da"
 ]       # Add your togetherAI API keys here
 
 
 together.api_key = keys[0]
-model_list = [d['id'] for d in together.Models.list()]
+model_list = [d['name'] for d in together.Models.list()]
 cnt = 0
 
 
 def call(prompt, model_ckpt, max_tokens, temperature, top_k, top_p, stop):
     global cnt
-    assert model_ckpt in model_list, f"model should be one of {model_list}"
+    # assert model_ckpt in model_list, f"model should be one of {model_list}"
 
     together.api_key = keys[cnt % len(keys)]
     response = together.Complete.create(
@@ -44,13 +47,13 @@ def call(prompt, model_ckpt, max_tokens, temperature, top_k, top_p, stop):
         temperature=temperature,
         top_k=top_k,
         top_p=top_p,
-        # api_key=keys[cnt % len(keys)],
+        api_key=keys[cnt % len(keys)],
         stop=stop
     )
     cnt = (cnt + 1) % len(keys)
     # return text
     # return response['output']['choices'][0]['text']
-    return response['choices'][0]['text']
+    return response['output']['choices'][0]['text']
 
 
 def call_TogetherAI(prompt, model_ckpt, max_tokens=256, temperature=0.8, top_k=40, top_p=0.95, stop=None):

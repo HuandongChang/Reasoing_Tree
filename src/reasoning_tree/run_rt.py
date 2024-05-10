@@ -16,6 +16,7 @@ import numpy as np
 from functools import partial
 from models.TogetherAI_API import call_TogetherAI
 from collections import Counter
+import re
 
 def fix_seeds(seed):
     # random
@@ -41,12 +42,13 @@ def get_votes(args, model, tokenizer, task, x, ys, n_evaluate_sample):
     values = task.vote_outputs_unwrap(vote_outputs, len(ys))
     return values
 
-def get_samples(args, model, tokenizer, task, x, y, n_generate_sample, stop):
+def get_subquestion(args, model, tokenizer, task, x, y, n_generate_sample, stop, depth):
     prompt = task.cot_prompt_wrap(x, y)
+    prompt += f"Question 5.{depth + 1}:"
     samples = generate(args, model, tokenizer, prompt, n_sample=n_generate_sample, stop=stop, max_tokens=128, temperature=0.8)
     out = []
     for sample in samples:
-        cur_branch = y + sample + '\n'
+        cur_branch = y + f"Question 5.{depth + 1}:" + sample + '\n'
         out.append(cur_branch)
     return out
 
@@ -59,8 +61,9 @@ def select_optimal_sample(samples, answers):
     print("select_optimal_sample: No Answer There")
     return samples[0]
         
-def get_subquestion_answer(args, model, tokenizer, task, x, y, n_generate_sample, stop):
+def get_subquestion_answer(args, model, tokenizer, task, x, y, stop, depth):
     prompt = task.cot_prompt_wrap(x, y)
+    prompt += f"Answer 5.{depth + 1}:"
     samples = generate(args, model, tokenizer, prompt, n_sample=args.n_evaluate_sample, stop=stop, max_tokens=128, temperature=0.8)  
     answers = [task.extract_answer(sample) for sample in samples]
     best_sample = select_optimal_sample(samples, answers)
@@ -72,11 +75,12 @@ def solve(args, task, idx, model, tokenizer):
     ys = ['\n']  
     final_ys = []
     paths = []
-    for _ in range(task.steps):
+    for i in range(task.steps):
         if not ys:
             break
+
         # generate subquestion
-        new_ys = [get_samples(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops) for y in ys]
+        new_ys = [get_subquestion(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops, depth=i) for y in ys]
         new_ys = list(itertools.chain(*new_ys))
         if args.verbose:
             print("new_ys: ", new_ys[:])
@@ -84,14 +88,14 @@ def solve(args, task, idx, model, tokenizer):
             print("")
         
         # generate answer for those subquestions
-        new_as = [get_subquestion_answer(args, model, tokenizer, task, x, y, args.n_generate_sample, stop=task.stops) for y in new_ys]
+        new_as = [get_subquestion_answer(args, model, tokenizer, task, x, y, stop=task.stops, depth=i) for y in new_ys]
         if args.verbose:
             print("new_as: ", new_as[:])
             print(new_as)
             print("")
 
         # update ys
-        new_ys = [y + a + "\n" for y, a in zip(new_ys, new_as)]
+        new_ys = [y + f"Answer 5.{i + 1}:" + a + "\n" for y, a in zip(new_ys, new_as)]
         ids = list(range(len(new_ys)))
 
         if args.enable_votes:
@@ -154,17 +158,17 @@ def run(args):
     all_question_corrects = []
     pbar = tqdm(range(max(args.task_start_index, 0), min(len(task), args.task_end_index)), desc="Acc: 0.00%")
     for i in pbar:
-        if i >= 500:
+        if i >= 150:
             break
         # solve
         model_answer, paths = solve(args, task, i, model, tokenizer)
         if args.verbose:
             print("model_asnwer: ", model_answer)
         # gt
-        if args.task in ("multiarith"):
-            gt = task.get_gt(task.data[i]["final_ans"])
-        else:
+        if args.task in ("SVAMP", "gsm8k"):
             gt = task.get_gt(task.data[i]["answer"])
+        elif args.task == "multiarith":
+            gt = task.get_gt(task.data[i]["final_ans"])
         gt = gt.replace(',','').replace('\n', '')
         gt = float(gt)
         

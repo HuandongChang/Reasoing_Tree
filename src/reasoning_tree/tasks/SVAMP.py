@@ -18,7 +18,7 @@ class SVMPTask():
         data_root = Path("./data")
         self.data = read_json(os.path.join(data_root, 'SVAMP', 'test_with_ids.json'))
         self.value_cache = {}
-        self.steps = 16
+        self.steps = 6
         self.stops = ["\n", "\n\n"]
 
     def __len__(self) -> int:

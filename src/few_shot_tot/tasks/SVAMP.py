@@ -69,7 +69,7 @@ class SVMPTask():
         return False
     
     def get_gt(self, question_asnwer):
-        return question_asnwer
+        return str(question_asnwer)
 
     def test_output(self, idx: int, output: str):
         model_answer = self.extract_answer(output)
